@@ -10,5 +10,10 @@
     "rootDir": "./src",
     "outDir": "./dist"
   },
-  "include": ["./src"]
+  "ts-node": {
+    "compilerOptions": {
+      "typeRoots": ["./types", "./node_modules/@types"]
+    }
+  },
+  "include": ["./src", "./types"]
 }
