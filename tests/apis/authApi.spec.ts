@@ -1,32 +1,33 @@
 // apis/authApi.spec.ts
 import express from "express";
-import { connect, connection } from "mongoose";
-import session from "express-session";
+import session, { SessionOptions } from "express-session";
 import passport from "passport";
 import request from "supertest";
-import { testMongoURL, encrypt } from "../../src/utils";
-import Auth from "../../src/models/auth";
+
+import prisma from "../../src/utils/prisma";
+import { upsertUser } from "../../src/utils/password";
 import { loginApi, homeApi, logoutApi } from "../../src/apis/authApi";
 
 const app = express();
+const sessionOptions: SessionOptions = {
+  secret: "keyboard cat",
+  resave: false,
+  saveUninitialized: false,
+};
 
 beforeAll(async () => {
   app.use(express.json());
-  app.use(
-    session({ secret: "keyboard cat", resave: false, saveUninitialized: false })
-  );
-  app.use(passport.initialize());
-  app.use(passport.session());
+  app.use(session(sessionOptions));
+  app.use(passport.authenticate("session"));
   app.post("/login", loginApi);
   app.get("/home", homeApi);
   app.post("/logout", logoutApi);
-  await connect(testMongoURL);
-  await Auth.create({ username: "john", password: encrypt("secret") });
+
+  await upsertUser("john", "secret");
 });
 
 afterAll(async () => {
-  await Auth.deleteMany();
-  await connection.close();
+  await prisma.user.deleteMany();
 });
 
 describe("loginApi", () => {
@@ -63,7 +64,7 @@ describe("homeApi", () => {
     const res = await agent.get("/home");
 
     expect(res.status).toBe(200);
-    expect(res.body).toStrictEqual({ username: "john" });
+    expect(res.body.username).toBe("john");
   });
 });
 

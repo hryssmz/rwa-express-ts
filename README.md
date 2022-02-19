@@ -40,7 +40,6 @@ npm init
 
 ```bash
 npm install -D ts-node @types/node
-npx tsc --init
 ```
 
 #### 2.2.2. Prettier
@@ -56,9 +55,7 @@ npm install -D prettier @prettier/plugin-pug prettier-plugin-sh
 ---
 
 ```bash
-npm install -D eslint eslint-config-prettier eslint-plugin-import
-npm install -D @typescript-eslint/eslint-plugin
-npm init @eslint/config
+npm install -D eslint eslint-config-prettier eslint-plugin-import @typescript-eslint/eslint-plugin
 ```
 
 #### 2.2.4. Husky
@@ -68,14 +65,6 @@ npm init @eslint/config
 ```bash
 npm install -D husky
 npx husky install
-npm set-script prepare "husky install"
-```
-
-Add some empty Husky scripts.
-
-```bash
-npx husky add .husky/pre-commit "exit 0"
-npx husky add .husky/pre-push "exit 0"
 ```
 
 #### 2.2.5. lint-staged
@@ -92,7 +81,6 @@ npm install -D lint-staged
 
 ```bash
 npm install -D jest @types/jest eslint-plugin-jest
-npx jest --init
 ```
 
 #### 2.2.7. Babel
@@ -111,14 +99,6 @@ npm install -D babel-jest @babel/core @babel/preset-env @babel/preset-typescript
 npm install -D supertest @types/supertest
 ```
 
-#### 2.2.9. nodemon
-
----
-
-```bash
-npm install -D nodemon
-```
-
 ### 2.3. Initialize Express Project
 
 ---
@@ -132,12 +112,13 @@ npm install express
 npm install -D @types/express
 ```
 
-#### 2.3.2. Mongoose
+#### 2.3.2. Prisma
 
 ---
 
 ```bash
-npm install mongoose
+npm install @prisma/client
+npm install -D prisma
 ```
 
 #### 2.3.3. morgan
@@ -199,4 +180,21 @@ npm install pug
 ```bash
 npm install http-errors
 npm install -D @types/http-errors
+```
+
+#### 2.3.10. prisma-session-store
+
+---
+
+```bash
+npm install @quixo3/prisma-session-store
+```
+
+#### 2.3.11. dotenv
+
+---
+
+```bash
+npm install dotenv
+npm install -D @types/dotenv
 ```

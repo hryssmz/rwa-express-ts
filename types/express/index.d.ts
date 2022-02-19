@@ -1,7 +1,7 @@
-// types/express/index.d.ts
+// express/index.d.ts
 declare namespace Express {
   export interface User {
-    id: string;
+    id: number;
     username: string;
   }
 }
