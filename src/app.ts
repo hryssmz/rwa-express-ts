@@ -1,5 +1,6 @@
 // app.ts
 import path from "path";
+import cors from "cors";
 import express, { Request, Response, NextFunction } from "express";
 import session, { SessionOptions } from "express-session";
 import createError, { HttpError } from "http-errors";
@@ -29,6 +30,9 @@ const sessionOptions: SessionOptions = {
 // Setup template engine.
 app.set("views", path.join(__dirname, "..", "views"));
 app.set("view engine", "pug");
+
+// Setup cors.
+app.use(cors({ origin: NODE_ENV === "development" }));
 
 // Setup request body parser.
 app.use(express.json());

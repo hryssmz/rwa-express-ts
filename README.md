@@ -198,3 +198,12 @@ npm install @quixo3/prisma-session-store
 npm install dotenv
 npm install -D @types/dotenv
 ```
+
+#### 2.3.12. cors
+
+---
+
+```bash
+npm install cors
+npm install -D @types/cors
+```
