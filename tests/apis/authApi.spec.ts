@@ -66,13 +66,12 @@ describe("homeApi", () => {
 });
 
 describe("logoutApi", () => {
-  test("HTTP 302: logged out", async () => {
+  test("HTTP 200: logged out", async () => {
     const agent = request.agent(app);
     await agent.post("/login").send({ username: "john", password: "secret" });
     const res = await agent.post("/logout");
 
-    expect(res.status).toBe(302);
-    expect(res.text).toBe("Found. Redirecting to /login");
+    expect(res.status).toBe(200);
     expect((await agent.get("/home")).status).toBe(302);
   });
 });

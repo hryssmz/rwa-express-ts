@@ -34,6 +34,12 @@ export const loginApi = (req: Request, res: Response, next: NextFunction) => {
   return callback(req, res, next);
 };
 
+export const logoutApi = (req: Request, res: Response) => {
+  // HTTP 200: logged out
+  req.logout();
+  return res.json();
+};
+
 export const homeApi = (req: Request, res: Response) => {
   if (!req.isAuthenticated()) {
     // HTTP 302: not authorized
@@ -42,10 +48,4 @@ export const homeApi = (req: Request, res: Response) => {
   const { id, username } = req.user;
   // HTTP 200: return content
   return res.json({ id, username });
-};
-
-export const logoutApi = (req: Request, res: Response) => {
-  // HTTP 302: logged out
-  req.logout();
-  return res.redirect("/login");
 };
