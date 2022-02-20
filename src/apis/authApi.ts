@@ -44,8 +44,8 @@ export const signupApi = async (req: Request, res: Response) => {
   const { username, password } = req.body;
   const user = await prisma.user.findUnique({ where: { username } });
   if (user !== null) {
-    // HTTP 200: user already exists
-    return res.status(200).json({ id: user.id, username });
+    // HTTP 400: user already exists
+    return res.status(400).json({ message: "User already exists." });
   }
   // HTTP 201: user created
   const { id } = await createUser(username, password);

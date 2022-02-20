@@ -70,13 +70,13 @@ describe("logoutApi", () => {
 });
 
 describe("signupApi", () => {
-  test("HTTP 200: user already exists", async () => {
+  test("HTTP 400: user already exists", async () => {
     const res = await request(app)
       .post("/signup")
       .send({ username: "john", password: "passwd" });
 
-    expect(res.status).toBe(200);
-    expect(res.body.username).toBe("john");
+    expect(res.status).toBe(400);
+    expect(res.body.message).toBe("User already exists.");
   });
 
   test("HTTP 201: user created", async () => {
