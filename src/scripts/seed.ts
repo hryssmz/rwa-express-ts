@@ -1,11 +1,11 @@
 import prisma from "../utils/prisma";
-import { upsertUser } from "../utils/password";
+import { createUser } from "../utils/password";
 
 async function seedUser() {
-  prisma.user.deleteMany();
+  await prisma.user.deleteMany();
   const userData: [string, string][] = [["john", "secret"]];
   userData.forEach(async ([username, password]) => {
-    const user = await upsertUser(username, password);
+    const user = await createUser(username, password);
     console.log(`Created user ${user.id}`);
   });
 }

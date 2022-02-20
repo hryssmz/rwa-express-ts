@@ -37,14 +37,7 @@ export const localStrategy = new LocalStrategy(
   }
 );
 
-export const upsertUser = async (username: string, password: string) => {
-  const user = await prisma.user.findUnique({ where: { username } });
-  if (user !== null) {
-    return await prisma.user.update({
-      where: { username },
-      data: { hashedPassword: getHashedPassword(password, user.salt) },
-    });
-  }
+export const createUser = async (username: string, password: string) => {
   const salt = generateSalt();
   return await prisma.user.create({
     data: { username, hashedPassword: getHashedPassword(password, salt), salt },

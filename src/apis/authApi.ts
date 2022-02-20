@@ -3,7 +3,7 @@ import { Response, Request, NextFunction } from "express";
 import passport from "passport";
 
 import prisma from "../utils/prisma";
-import { localStrategy } from "../utils/password";
+import { localStrategy, createUser } from "../utils/password";
 
 passport.use(localStrategy);
 
@@ -38,6 +38,18 @@ export const logoutApi = (req: Request, res: Response) => {
   // HTTP 200: logged out
   req.logout();
   return res.json();
+};
+
+export const signupApi = async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+  const user = await prisma.user.findUnique({ where: { username } });
+  if (user !== null) {
+    // HTTP 200: user already exists
+    return res.status(200).json({ id: user.id, username });
+  }
+  // HTTP 201: user created
+  const { id } = await createUser(username, password);
+  return res.status(201).json({ id, username });
 };
 
 export const homeApi = (req: Request, res: Response) => {
