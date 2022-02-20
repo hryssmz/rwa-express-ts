@@ -1,19 +1,15 @@
 // apis/authApi.spec.ts
 import express from "express";
-import session, { SessionOptions } from "express-session";
+import session from "express-session";
 import passport from "passport";
 import request from "supertest";
 
 import prisma from "../../src/utils/prisma";
 import { upsertUser } from "../../src/utils/password";
+import { sessionOptions } from "../../src/utils/mocks";
 import { loginApi, homeApi, logoutApi } from "../../src/apis/authApi";
 
 const app = express();
-const sessionOptions: SessionOptions = {
-  secret: "keyboard cat",
-  resave: false,
-  saveUninitialized: false,
-};
 
 beforeAll(async () => {
   app.use(express.json());
@@ -70,12 +66,9 @@ describe("homeApi", () => {
 });
 
 describe("logoutApi", () => {
-  test("HTTP 200: logged out", async () => {
+  test("HTTP 302: logged out", async () => {
     const agent = request.agent(app);
     await agent.post("/login").send({ username: "john", password: "secret" });
-
-    expect((await agent.get("/home")).status).toBe(200);
-
     const res = await agent.post("/logout");
 
     expect(res.status).toBe(302);

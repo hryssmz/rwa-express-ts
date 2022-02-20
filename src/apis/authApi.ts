@@ -22,19 +22,11 @@ passport.deserializeUser(async (id: number, done) => {
 
 export const loginApi = (req: Request, res: Response, next: NextFunction) => {
   const callback = passport.authenticate("local", (err, user, info) => {
-    /* c8 ignore next 3 */
-    if (err) {
-      return next(err);
-    }
     if (!user) {
       // HTTP 401: Bad credential
       return res.status(401).json(info);
     }
-    req.login(user, err => {
-      /* c8 ignore next 3 */
-      if (err) {
-        return next(err);
-      }
+    req.login(user, () => {
       // HTTP 200: Authenticated
       return res.json(user);
     });
@@ -53,7 +45,7 @@ export const homeApi = (req: Request, res: Response) => {
 };
 
 export const logoutApi = (req: Request, res: Response) => {
-  // HTTP 200: logged out
+  // HTTP 302: logged out
   req.logout();
   return res.redirect("/login");
 };

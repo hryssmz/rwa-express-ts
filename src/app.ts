@@ -1,16 +1,30 @@
 // app.ts
 import path from "path";
 import express, { Request, Response, NextFunction } from "express";
-import session from "express-session";
+import session, { SessionOptions } from "express-session";
 import createError, { HttpError } from "http-errors";
 import logger from "morgan";
 import passport from "passport";
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 
-import { NODE_ENV } from "./utils/env";
-import { sessionOptions } from "./utils/session";
+import { NODE_ENV, SECRET } from "./utils/env";
+import prisma from "./utils/prisma";
 import indexRouter from "./routes/index";
 
 const app = express();
+const sessionOptions: SessionOptions = {
+  cookie: {
+    maxAge: 60 * 1000, // ms
+  },
+  secret: SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: new PrismaSessionStore(prisma, {
+    checkPeriod: 2 * 60 * 1000, // ms
+    dbRecordIdIsSessionId: true,
+    dbRecordIdFunction: undefined,
+  }),
+};
 
 // Setup template engine.
 app.set("views", path.join(__dirname, "..", "views"));
