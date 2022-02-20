@@ -19,6 +19,7 @@ beforeAll(async () => {
   app.use(express.json());
   app.use(session(sessionOptions));
   app.use(passport.authenticate("session"));
+
   app.post("/login", loginApi);
   app.get("/home", homeApi);
   app.post("/logout", logoutApi);
@@ -31,22 +32,22 @@ afterAll(async () => {
 });
 
 describe("loginApi", () => {
-  test("HTTP 302: failureRedirect: /login", async () => {
+  test("HTTP 401: Bad credential", async () => {
     const res = await request(app)
       .post("/login")
       .send({ username: "admin", password: "badPass" });
 
-    expect(res.status).toBe(302);
-    expect(res.text).toBe("Found. Redirecting to /login");
+    expect(res.status).toBe(401);
+    expect(res.body.message).toBe("Incorrect username or password.");
   });
 
-  test("HTTP 302: successRedirect: /home", async () => {
+  test("HTTP 200: Authenticated", async () => {
     const res = await request(app)
       .post("/login")
       .send({ username: "john", password: "secret" });
 
-    expect(res.status).toBe(302);
-    expect(res.text).toBe("Found. Redirecting to /home");
+    expect(res.status).toBe(200);
+    expect(res.body.username).toBe("john");
   });
 });
 

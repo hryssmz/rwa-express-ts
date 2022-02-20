@@ -33,8 +33,7 @@ export const localStrategy = new LocalStrategy(
       return callback(null, false, { message });
     }
 
-    const expressUser: Express.User = { id, username };
-    return callback(null, expressUser);
+    return callback(null, { id, username });
   }
 );
 

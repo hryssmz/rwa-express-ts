@@ -1,5 +1,5 @@
 // apis/authApi.ts
-import { Response, Request } from "express";
+import { Response, Request, NextFunction } from "express";
 import passport from "passport";
 
 import prisma from "../utils/prisma";
@@ -20,10 +20,27 @@ passport.deserializeUser(async (id: number, done) => {
   return done(null, { id, username: user.username });
 });
 
-export const loginApi = passport.authenticate("local", {
-  successRedirect: "/home",
-  failureRedirect: "/login",
-});
+export const loginApi = (req: Request, res: Response, next: NextFunction) => {
+  const callback = passport.authenticate("local", (err, user, info) => {
+    /* c8 ignore next 3 */
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      // HTTP 401: Bad credential
+      return res.status(401).json(info);
+    }
+    req.login(user, err => {
+      /* c8 ignore next 3 */
+      if (err) {
+        return next(err);
+      }
+      // HTTP 200: Authenticated
+      return res.json(user);
+    });
+  });
+  return callback(req, res, next);
+};
 
 export const homeApi = (req: Request, res: Response) => {
   if (!req.isAuthenticated()) {
